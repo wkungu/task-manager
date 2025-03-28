@@ -32,6 +32,9 @@ debug.log
 
 # --- 🏗 Node.js (Next.js Frontend) ---
 /frontend/node_modules/
+/frontend/.next/
+/frontend/package-lock.json
+/frontend/build/
 **/node_modules
 /.next/
 /.next/cache/
