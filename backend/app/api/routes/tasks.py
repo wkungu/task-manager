@@ -9,7 +9,7 @@ from app.services.auth import get_current_user  # Import authentication function
 
 router = APIRouter()
 
-# ✅ Create a task (Only Authenticated Users)
+# Create a task (Only Authenticated Users)
 @router.post("/", response_model=TaskResponse)
 async def create_task(
     task_data: TaskCreate,
@@ -19,37 +19,37 @@ async def create_task(
     new_task = Task(
         title=task_data.title,
         description=task_data.description,
-        user_id=current_user.id  # ✅ Assign the task to the logged-in user
+        user_id=current_user.id  # Assign the task to the logged-in user
     )
     db.add(new_task)
     await db.commit()
     await db.refresh(new_task)
     return new_task
 
-# ✅ Get all tasks (Only the User's Own Tasks)
+# Get all tasks (Only the User's Own Tasks)
 @router.get("/", response_model=list[TaskResponse])
 async def get_tasks(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    result = await db.execute(select(Task).where(Task.user_id == current_user.id))  # ✅ Filter by user_id
+    result = await db.execute(select(Task).where(Task.user_id == current_user.id))  # Filter by user_id
     tasks = result.scalars().all()
     return tasks
 
-# ✅ Get a specific task (Only if Owned by User)
+# Get a specific task (Only if Owned by User)
 @router.get("/{task_id}", response_model=TaskResponse)
 async def get_task(
     task_id: int,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    result = await db.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))  # ✅ Restrict access
+    result = await db.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))  # Restrict access
     task = result.scalars().first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found or not authorized")
     return task
 
-# ✅ Update a task (Only if Owned by User)
+# Update a task (Only if Owned by User)
 @router.put("/{task_id}", response_model=TaskResponse)
 async def update_task(
     task_id: int,
@@ -68,7 +68,7 @@ async def update_task(
     await db.refresh(task)
     return task
 
-# ✅ Delete a task (Only if Owned by User)
+# Delete a task (Only if Owned by User)
 @router.delete("/{task_id}")
 async def delete_task(
     task_id: int,

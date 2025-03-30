@@ -21,9 +21,9 @@ async def startup():
     """Initialize the database and seed data"""
     await init_db()
 
-    async for db in get_db():  # ✅ Use async session
+    async for db in get_db():
         # Check if a default user exists
-        result = await db.execute(select(User))  # ✅ Async query
+        result = await db.execute(select(User))
         user = result.scalars().first()  # Extract first user
         
         if not user:
@@ -33,24 +33,25 @@ async def startup():
                 password_hash=pwd_context.hash("admin123"),  # Hash the password
             )
             db.add(default_user)
-            await db.commit()  # ✅ Async commit
-            print("✅ Default user created: admin@example.com / admin123")
+            await db.commit()
+            print("Default user created: admin@example.com / admin123")
 
         # Check if any tasks exist
-        result = await db.execute(select(Task))  # ✅ Async query
+        result = await db.execute(select(Task))
         task = result.scalars().first()
         
         if not task:
             default_task = Task(
                 title="Welcome Task",
-                description="This is your first task!"
+                description="This is your first task!",
+                user_id = 1,
             )
             db.add(default_task)
-            await db.commit()  # ✅ Async commit
-            print("✅ Default task created: Welcome Task")
+            await db.commit()
+            print("Default task created: Welcome Task")
 
         break  # Exit the loop after using one session
 
 @app.get("/")
-async def read_root():  # ✅ Made async
+async def read_root():
     return {"message": "Welcome to the Task Management API"}
