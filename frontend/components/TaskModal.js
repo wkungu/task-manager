@@ -52,4 +52,3 @@ export default function TaskModal({ onCreateTask }) {
     </Dialog>
   );
 }
-s

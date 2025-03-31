@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { loginUser } from "@/lib/api"; // Import API function
 import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,10 +15,12 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
+      callbackUrl: "/dashboard",
     });
 
     if (result?.error) {
@@ -29,9 +32,11 @@ export default function LoginPage() {
       if (session?.accessToken) {
         localStorage.setItem("accessToken", session.accessToken); // Save token in localStorage
       }
-      
+
       router.push("/dashboard");
     }
+
+    
   };
 
   return (

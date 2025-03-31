@@ -7,36 +7,40 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "email@example.com" },
+        email: { label: "Email", type: "email", placeholder: "admin@example.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch("http://localhost:8000/api/auth/login", {
+        
+        const res = await fetch("http://task-manager-backend:8000/api/auth/login", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(credentials),
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json", // Ensure JSON response
+          },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
         });
 
-        if (!res.ok) {
+        let data;
+        try {
+          data = await res.json();
+        } catch (error) {
+          console.error("Failed to parse JSON:", error);
+          throw new Error("Invalid server response");
+        }
+
+        console.log("🔹 Login API response:", data);
+
+        if (!res.ok || !data.access_token) {
           throw new Error("Invalid credentials");
         }
 
-        const { access_token } = await res.json();
-
-        if (!access_token) {
-          throw new Error("No token received");
-        }
-
-        // 🔹 Decode JWT to extract user email
-        const decodedToken = jwt.verify(access_token, process.env.NEXTAUTH_SECRET);
-
-        if (!decodedToken || !decodedToken.sub) {
-          throw new Error("Invalid token format");
-        }
-
         return {
-          email: decodedToken.sub, // Extract user email from JWT
-          access_token,
+          email: credentials.email,
+          access_token: data.access_token,
         };
       },
     }),
@@ -58,11 +62,13 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: `${process.env.NEXTAUTH_SECRET}`,
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 24, // 1 day
   },
-  useSecureCookies: false, // 👈 Disable secure cookies (optional)
+  debug: true, // Enable logs for debugging
+  csrf: false, // (Use this only if necessary)
 };
 
 const handler = NextAuth(authOptions);

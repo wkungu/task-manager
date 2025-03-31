@@ -13,6 +13,10 @@ import TaskModal from "@/components/TaskModal";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+
+  // const { data: session } = useSession();
+  console.log("🟢 Session Data:", session);
+
   const router = useRouter();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();

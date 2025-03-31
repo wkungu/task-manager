@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.future import select
 from passlib.context import CryptContext
 
@@ -9,6 +10,14 @@ from app.models.user import User
 from app.models.task import Task
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow frontend
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Include authentication and task management routes
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])

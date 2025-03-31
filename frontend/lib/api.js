@@ -1,12 +1,17 @@
+import { getSession } from "next-auth/react";
+
 const API_URL = "http://localhost:8000/api";
 
 /**
  * Helper function to get the stored access token
  */
-function getAuthHeaders() {
-  const token = localStorage.getItem("access_token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
+async function getAuthHeaders() {
+  const session = await getSession(); // Get session from NextAuth
+  if (!session || !session.accessToken) return {};
+
+  return { "Authorization": `Bearer ${session.accessToken}` };
 }
+
 
 /**
  * Register a new user
@@ -31,10 +36,11 @@ export async function registerUser(userData) {
  * Fetch tasks
  */
 export async function fetchTasks() {
+  const headers = await getAuthHeaders(); // ✅ Wait for the token
   const response = await fetch(`${API_URL}/tasks`, {
     method: "GET",
     headers: { 
-      ...getAuthHeaders(), 
+      ...headers, 
       "Content-Type": "application/json" 
     },
   });
@@ -47,10 +53,11 @@ export async function fetchTasks() {
  * @param {Object} task - { title, description }
  */
 export async function createTask(task) {
+  const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/tasks`, {
     method: "POST",
     headers: { 
-      ...getAuthHeaders(), 
+      ...headers, 
       "Content-Type": "application/json" 
     },
     body: JSON.stringify(task),
@@ -65,10 +72,11 @@ export async function createTask(task) {
  * @param {Object} task - { id, title, description }
  */
 export async function updateTask(task) {
+  const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/tasks/${task.id}`, {
     method: "PUT",
     headers: { 
-      ...getAuthHeaders(), 
+      ...headers, 
       "Content-Type": "application/json" 
     },
     body: JSON.stringify(task),
@@ -83,9 +91,10 @@ export async function updateTask(task) {
  * @param {Integer} taskId
  */
 export async function deleteTask(taskId) {
+  const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/tasks/${taskId}`, {
     method: "DELETE",
-    headers: getAuthHeaders(),
+    headers: headers,
   });
   if (!response.ok) throw new Error("Failed to delete task");
   return taskId;
