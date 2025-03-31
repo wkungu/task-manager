@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.database import get_db
 from app.models.task import Task
-from app.models.user import User  # Import User model
+from app.models.user import User
 from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse
-from app.services.auth import get_current_user  # Import authentication function
+from app.services.auth import get_current_user
 
 router = APIRouter()
 

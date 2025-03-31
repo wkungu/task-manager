@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchTasks, createTask, updateTask, deleteTask } from "@/lib/api";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setTasks, addTask, updateTask as updateTaskRedux, deleteTask as deleteTaskRedux } from "@/store/taskSlice";
 import { openTaskModal } from "@/store/uiSlice";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,6 @@ import TaskModal from "@/components/TaskModal";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-
-  // const { data: session } = useSession();
-  console.log("🟢 Session Data:", session);
 
   const router = useRouter();
   const dispatch = useDispatch();

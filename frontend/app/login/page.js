@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/api"; // Import API function
 import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,11 +25,11 @@ export default function LoginPage() {
     if (result?.error) {
       setError("Invalid credentials");
     } else {
-      // 🔹 Fetch session data to get the access token
+      
       const session = await fetch("/api/auth/session").then((res) => res.json());
 
       if (session?.accessToken) {
-        localStorage.setItem("accessToken", session.accessToken); // Save token in localStorage
+        localStorage.setItem("accessToken", session.accessToken);
       }
 
       router.push("/dashboard");

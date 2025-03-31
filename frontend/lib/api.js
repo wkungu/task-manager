@@ -36,7 +36,7 @@ export async function registerUser(userData) {
  * Fetch tasks
  */
 export async function fetchTasks() {
-  const headers = await getAuthHeaders(); // ✅ Wait for the token
+  const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/tasks`, {
     method: "GET",
     headers: { 
@@ -87,7 +87,7 @@ export async function updateTask(task) {
 
 
 /**
- * Delete a new task
+ * Delete a task
  * @param {Integer} taskId
  */
 export async function deleteTask(taskId) {

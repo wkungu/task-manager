@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt from "jsonwebtoken";
 
 export const authOptions = {
   providers: [
@@ -12,11 +11,11 @@ export const authOptions = {
       },
       async authorize(credentials) {
         
-        const res = await fetch("http://task-manager-backend:8000/api/auth/login", {
+        const res = await fetch("http://task-manager-backend:8000/api/auth/login", { // task-manager-backend is the docker container running the backend service
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
-            "Accept": "application/json", // Ensure JSON response
+            "Accept": "application/json",
           },
           body: JSON.stringify({
             email: credentials.email,
@@ -31,8 +30,6 @@ export const authOptions = {
           console.error("Failed to parse JSON:", error);
           throw new Error("Invalid server response");
         }
-
-        console.log("🔹 Login API response:", data);
 
         if (!res.ok || !data.access_token) {
           throw new Error("Invalid credentials");
@@ -68,7 +65,7 @@ export const authOptions = {
     maxAge: 60 * 60 * 24, // 1 day
   },
   debug: true, // Enable logs for debugging
-  csrf: false, // (Use this only if necessary)
+  csrf: false,
 };
 
 const handler = NextAuth(authOptions);

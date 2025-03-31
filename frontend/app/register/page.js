@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/lib/api"; // ✅ Import API function
+import { registerUser } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +17,7 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       await registerUser({ email, password, username });
-      router.push("/login"); // Redirect to login after success
+      router.push("/login");
     } catch (err) {
       setError(err.message);
     }
