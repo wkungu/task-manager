@@ -17,7 +17,6 @@ venv/
 # Alembic migrations
 /backend/alembic/versions/*.pyc
 /backend/alembic/**/__pycache__/
-/backend/alembic/versions/*.py
 /backend/alembic/__pycache__/
 
 # Logs & debug

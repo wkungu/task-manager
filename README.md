@@ -68,7 +68,7 @@ This will spin up:
 ### 4 Run Database Migrations
 Once the containers are up, run the database migrations inside the **backend** container:
 ```sh
-docker exec -it task-manager-backend alembic upgrade head
+docker exec -it backend alembic upgrade head
 ```
 
 This ensures that the database schema is up to date.
