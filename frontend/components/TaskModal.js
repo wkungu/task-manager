@@ -1,23 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeTaskModal } from "@/store/uiSlice";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export default function TaskModal({ onCreateTask }) {
+export default function TaskModal({ onUpdateTask, onCreateTask, taskToEdit }) {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.ui.taskModalOpen);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  useEffect(() =>{
+      if(taskToEdit){
+        setTitle(taskToEdit.title);
+        setDescription(taskToEdit.description);
+      }else{
+        setTitle("");
+        setDescription("");
+      }
+  }, [taskToEdit])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim()) {
-      onCreateTask({ title, description });
-      setTitle("");
-      setDescription("");
+      if(taskToEdit){
+        onUpdateTask({...taskToEdit, title, description });
+      }else{
+        onCreateTask({ title, description });
+        setTitle("");
+        setDescription("");
+      }
       dispatch(closeTaskModal());
     }
   };
@@ -28,7 +42,7 @@ export default function TaskModal({ onCreateTask }) {
     <Dialog open={isOpen} onOpenChange={() => dispatch(closeTaskModal())}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
+          <DialogTitle>{taskToEdit ? 'Edit Task': 'Add New Task'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <input
@@ -45,7 +59,7 @@ export default function TaskModal({ onCreateTask }) {
             onChange={(e) => setDescription(e.target.value)}
           />
           <Button type="submit" className="mt-4 w-full">
-            Create Task
+            {taskToEdit? 'Edit Task' : 'Create Task' }
           </Button>
         </form>
       </DialogContent>

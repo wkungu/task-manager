@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchTasks, createTask, updateTask, deleteTask } from "@/lib/api";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import TaskModal from "@/components/TaskModal";
 export default function DashboardPage() {
   const { data: session, status } = useSession();
 
+  const [taskToEdit, setTaskToEdit] = useState(null)
   const router = useRouter();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -66,11 +67,14 @@ export default function DashboardPage() {
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <p className="text-gray-600">Welcome, {session?.user?.email}!</p>
 
-      <Button onClick={() => dispatch(openTaskModal())} className="mt-4">
+      <Button onClick={() => {
+          setTaskToEdit(null); // Reset taskToEdit for new task
+          dispatch(openTaskModal());
+        }} className="mt-4">
         Add New Task
       </Button>
 
-      <TaskModal onCreateTask={(task) => createTaskMutation.mutate(task)} />
+      <TaskModal taskToEdit={taskToEdit} onUpdateTask={(task) => updateTaskMutation.mutate(task)} onCreateTask={(task) => createTaskMutation.mutate(task)} />
 
       <div className="mt-6 w-full max-w-md">
         <h2 className="text-lg font-semibold">Your Tasks:</h2>
@@ -84,8 +88,11 @@ export default function DashboardPage() {
                 <p className="font-medium">{task.title}</p>
                 <p className="text-gray-600 text-sm">{task.description}</p>
               </div>
-              <div className="space-x-2">
-                <Button onClick={() => updateTaskMutation.mutate({ ...task, title: "Updated Task" })}>
+              <div className="space-x-2" style={{display: 'flex'}}>
+                <Button onClick={() => {
+                  setTaskToEdit(task);
+                  dispatch(openTaskModal());
+                }}>
                   Edit
                 </Button>
                 <Button variant="destructive" onClick={() => deleteTaskMutation.mutate(task.id)}>
