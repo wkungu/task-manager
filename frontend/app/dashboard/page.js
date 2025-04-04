@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,8 +10,10 @@ import { setTasks, addTask, updateTask as updateTaskRedux, deleteTask as deleteT
 import { openTaskModal } from "@/store/uiSlice";
 import { Button } from "@/components/ui/button";
 import TaskModal from "@/components/TaskModal";
+import ReadMore from "@/components/ReadMore";
 
 export default function DashboardPage() {
+  
   const { data: session, status } = useSession();
 
   const [taskToEdit, setTaskToEdit] = useState(null)
@@ -63,32 +65,29 @@ export default function DashboardPage() {
   if (error) return <p className="text-red-500">Error loading tasks</p>;
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="text-gray-600">Welcome, {session?.user?.email}!</p>
+    <>
+      <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">{tasks.length === 0 ? 'You have no tasks' : 'Your Tasks'}</h2>
+            <Button onClick={() => {
+                setTaskToEdit(null); // Reset taskToEdit for new task
+                dispatch(openTaskModal());
+              }} className="mt-4">
+              Add New Task
+            </Button>
+          </div>
 
-      <Button onClick={() => {
-          setTaskToEdit(null); // Reset taskToEdit for new task
-          dispatch(openTaskModal());
-        }} className="mt-4">
-        Add New Task
-      </Button>
+          <TaskModal taskToEdit={taskToEdit} onUpdateTask={(task) => updateTaskMutation.mutate(task)} onCreateTask={(task) => createTaskMutation.mutate(task)} />
 
-      <TaskModal taskToEdit={taskToEdit} onUpdateTask={(task) => updateTaskMutation.mutate(task)} onCreateTask={(task) => createTaskMutation.mutate(task)} />
-
-      <div className="mt-6 w-full max-w-md">
-        <h2 className="text-lg font-semibold">Your Tasks:</h2>
-        <ul className="mt-2 space-y-2">
-          {tasks?.map((task) => (
-            <li
-              key={task.id}
-              className="border rounded-md p-3 shadow-sm bg-white flex justify-between items-center"
-            >
-              <div>
-                <p className="font-medium">{task.title}</p>
-                <p className="text-gray-600 text-sm">{task.description}</p>
-              </div>
-              <div className="space-x-2" style={{display: 'flex'}}>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tasks?.map((task) => (
+              <div key={task.id} className="bg-white p-4 shadow-md rounded-md">
+                <div className="flex justify-between">
+                  <h3 className="font-bold dark:text-gray-600">{task.title}</h3>
+                  <span className="text-sm text-gray-500 dark:text-gray-600">Status: {task.status}</span>
+                </div>
+                {/* <p className="text-gray-600">{task.description}</p> */}
+                <ReadMore text={task.description} />
+                <div className="mt-2 flex space-x-2">
                 <Button onClick={() => {
                   setTaskToEdit(task);
                   dispatch(openTaskModal());
@@ -98,15 +97,10 @@ export default function DashboardPage() {
                 <Button variant="destructive" onClick={() => deleteTaskMutation.mutate(task.id)}>
                   Delete
                 </Button>
+                </div>
               </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <Button onClick={() => signOut()} className="mt-4">
-        Logout
-      </Button>
-    </div>
+            ))}
+          </div>
+    </>
   );
 }

@@ -119,3 +119,13 @@
     @apply bg-background text-foreground;
     }
 }
+
+.read-more-button {
+  color: #3182ce;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.read-more-button:hover {
+  color: #2b6cb0;
+}

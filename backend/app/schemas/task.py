@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 class TaskBase(BaseModel):
     title: str
+    status: str | None = None
     description: str | None = None
 
 class TaskCreate(TaskBase):
