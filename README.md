@@ -62,16 +62,8 @@ docker-compose up --build
 This will spin up:
 
 - **PostgreSQL database**
-- **FastAPI backend** (task-manager-backend)
+- **FastAPI backend** (task-manager-backend) This container has an entrypoint.sh file that will first run the database migrations before starting FastAPI
 - **Next.js frontend** (task-manager-frontend)
-
-### 4 Run Database Migrations
-Once the containers are up, run the database migrations inside the **backend** container:
-```sh
-docker exec -it backend alembic upgrade head
-```
-
-This ensures that the database schema is up to date.
 
 ## 📄 API Documentation
 Once the backend is running, visit:
