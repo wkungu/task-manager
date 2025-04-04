@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e  # Exit immediately if a command fails
+
 echo "Running Alembic migrations..."
 alembic upgrade head
 
