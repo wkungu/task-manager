@@ -17,5 +17,11 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Start FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Copy entry point file
+COPY entrypoint.sh /entrypoint.sh
+
+# change permissions to the entry file to make it executable
+RUN chmod +x /entrypoint.sh
+
+# Run the entrypoint file
+CMD ["/entrypoint.sh"]
