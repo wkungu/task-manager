@@ -31,6 +31,70 @@ export async function registerUser(userData) {
   return res.json();
 }
 
+/**
+ * Fetch current logged in user
+ */
+export async function fetchCurrentUser() {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/auth/me`, {
+    method: "GET",
+    headers: { 
+      ...headers, 
+      "Content-Type": "application/json" 
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+}
+
+
+/**
+ * Update a user
+ * @param {Object} user - { id, email, username }
+ */
+export async function updateUser(user) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/auth/users/${user.id}/profile`, {
+    method: "PUT",
+    headers: { 
+      ...headers, 
+      "Content-Type": "application/json" 
+    },
+    body: JSON.stringify(user),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to update user");
+  }
+  return response.json();
+}
+
+
+
+/**
+ * Update user password
+ * @param {Object} details - { id, current_password, new_password }
+ */
+export async function updateUserPassword(details) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/auth/users/${details.id}/password`, {
+    method: "PUT",
+    headers: { 
+      ...headers, 
+      "Content-Type": "application/json" 
+    },
+    body: JSON.stringify(details),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to update user password");
+  }
+  return response.json();
+}
+
+
 
 /**
  * Fetch tasks
@@ -62,7 +126,11 @@ export async function createTask(task) {
     },
     body: JSON.stringify(task),
   });
-  if (!response.ok) throw new Error("Failed to create task");
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to create task");
+  }
   return response.json();
 }
 
@@ -81,7 +149,11 @@ export async function updateTask(task) {
     },
     body: JSON.stringify(task),
   });
-  if (!response.ok) throw new Error("Failed to update task");
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to update task");
+  }
   return response.json();
 }
 
@@ -96,6 +168,10 @@ export async function deleteTask(taskId) {
     method: "DELETE",
     headers: headers,
   });
-  if (!response.ok) throw new Error("Failed to delete task");
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to delete task");
+  }
   return taskId;
 }

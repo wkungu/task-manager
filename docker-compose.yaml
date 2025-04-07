@@ -12,18 +12,13 @@ services:
     volumes:
       - ./backend:/app
     command:
-      [
-        'uvicorn',
-        'app.main:app',
-        '--host',
-        '0.0.0.0',
-        '--port',
-        '8000',
-        '--reload',
+      [ 
+        "sh", "-c", "wait-for-it db:5432 -- uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
       ]
 
   frontend:
     container_name: task-manager-frontend
+    platform: linux/amd64
     build: ./frontend
     ports:
       - '3000:3000'

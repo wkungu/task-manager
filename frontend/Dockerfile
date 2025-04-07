@@ -4,11 +4,13 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json first to leverage Docker cache
 COPY package.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy project files
+# Copy the rest of the application files
 COPY . .
 
 # Expose port

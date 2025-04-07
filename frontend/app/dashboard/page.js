@@ -11,10 +11,11 @@ import { openTaskModal } from "@/store/uiSlice";
 import { Button } from "@/components/ui/button";
 import TaskModal from "@/components/TaskModal";
 import ReadMore from "@/components/ReadMore";
+import Spinner from "@/components/Spinner";
 
 export default function DashboardPage() {
   
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const [taskToEdit, setTaskToEdit] = useState(null)
   const router = useRouter();
@@ -61,13 +62,13 @@ export default function DashboardPage() {
     },
   });
 
-  if (status === "loading" || isLoading) return <p>Loading...</p>;
+  if (status === "loading" || isLoading) return <div className="flex items-center flex-col"><Spinner /><span>Loading...</span></div>;
   if (error) return <p className="text-red-500">Error loading tasks</p>;
 
   return (
     <>
       <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">{tasks.length === 0 ? 'You have no tasks' : 'Your Tasks'}</h2>
+            <h6 className="font-bold">{tasks.length === 0 ? 'You have no tasks' : 'Your Tasks'}</h6>
             <Button onClick={() => {
                 setTaskToEdit(null); // Reset taskToEdit for new task
                 dispatch(openTaskModal());
