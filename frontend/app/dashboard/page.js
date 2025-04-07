@@ -78,8 +78,13 @@ export default function DashboardPage() {
           </div>
 
           <TaskModal taskToEdit={taskToEdit} onUpdateTask={(task) => updateTaskMutation.mutate(task)} onCreateTask={(task) => createTaskMutation.mutate(task)} />
+          
+          
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            {tasks.length === 0 ? <div className="w-full bg-white p-4 shadow-md rounded-md">You don't have any tasks</div> : null }
+
             {tasks?.map((task) => (
               <div key={task.id} className="bg-white p-4 shadow-md rounded-md">
                 <div className="flex justify-between">
