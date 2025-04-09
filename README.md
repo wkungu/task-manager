@@ -5,6 +5,9 @@ A full-stack task management system built with **FastAPI**, **Next.js 15**, and 
 ## Demo Video
 - **[Demo Video URL](https://vento.so/view/4d504d22-563d-4193-b38f-d6b2580cd79b?utm_medium=share)**
 
+<img src="./frontend/dashboard.png" alt="Dashboard Page" width="100%" />
+
+
 ## 🚀 Features
 
 - Authentication with **JWT (API) & NextAuth (Frontend)**
