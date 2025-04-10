@@ -19,6 +19,7 @@ async def create_task(
     new_task = Task(
         title=task_data.title,
         description=task_data.description,
+        status=task_data.status,
         user_id=current_user.id  # Assign the task to the logged-in user
     )
     db.add(new_task)
@@ -64,6 +65,7 @@ async def update_task(
 
     task.title = task_data.title or task.title
     task.description = task_data.description or task.description
+    task.status = task_data.status or task.status
     await db.commit()
     await db.refresh(task)
     return task

@@ -11,26 +11,31 @@ export default function TaskModal({ onUpdateTask, onCreateTask, taskToEdit }) {
   const isOpen = useSelector((state) => state.ui.taskModalOpen);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("pending");
 
   useEffect(() =>{
       if(taskToEdit){
         setTitle(taskToEdit.title);
         setDescription(taskToEdit.description);
+        setStatus(taskToEdit.status || "pending");
       }else{
         setTitle("");
         setDescription("");
+        setStatus("pending");
       }
   }, [taskToEdit])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim()) {
+      const taskData = { title, description, status };
       if(taskToEdit){
-        onUpdateTask({...taskToEdit, title, description });
+        onUpdateTask({ ...taskToEdit, ...taskData });
       }else{
-        onCreateTask({ title, description });
+        onCreateTask(taskData);
         setTitle("");
         setDescription("");
+        setStatus("pending");
       }
       dispatch(closeTaskModal());
     }
@@ -58,6 +63,15 @@ export default function TaskModal({ onUpdateTask, onCreateTask, taskToEdit }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          <select
+            className="w-full p-2 border rounded-md mt-2"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
           <Button type="submit" className="mt-4 w-full">
             {taskToEdit? 'Edit Task' : 'Create Task' }
           </Button>

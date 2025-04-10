@@ -9,7 +9,16 @@ from app.core.database import init_db, get_db
 from app.models.user import User
 from app.models.task import Task
 
-app = FastAPI()
+app = FastAPI(
+    title="Task Manager",
+    description="Manage your task efficiently",
+    summary="Task management",
+    version="0.0.1",
+    terms_of_service="http://localhost:8000/",
+    contact={
+        "name": "William K",
+        "email": "admin@example.com",
+    },)
 
 app.add_middleware(
     CORSMiddleware,

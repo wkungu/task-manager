@@ -70,7 +70,7 @@ This will spin up:
 
 ### 4 Developer Reset Script (Optional)
 
-To completely reset the dev environment (containers, volumes, frontend image) run the following script:
+To completely reset the dev environment (containers, volumes, frontend & backend images) run the following script:
 
 ```sh
 ./dev-reset.sh
