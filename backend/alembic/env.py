@@ -2,10 +2,13 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import logging
+logger = logging.getLogger("alembic.runtime.migration")
 
 import asyncio
+
 from logging.config import fileConfig
-from sqlalchemy.ext.asyncio import AsyncEngine
+
 from alembic import context
 from app.db import Base, async_engine  # Ensure this points to your SQLAlchemy models and engine
 
@@ -15,7 +18,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Import your models to ensure Alembic detects them
-from app.models import *  # Adjust this based on your project structure
+from app.models import * 
 
 target_metadata = Base.metadata
 

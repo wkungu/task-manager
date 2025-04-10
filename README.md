@@ -68,6 +68,18 @@ This will spin up:
 - **FastAPI backend** (task-manager-backend) This container has an entrypoint.sh file that will first run the database migrations before starting FastAPI
 - **Next.js frontend** (task-manager-frontend)
 
+### 4 Developer Reset Script (Optional)
+
+To completely reset the dev environment (containers, volumes, frontend image) run the following script:
+
+```sh
+./dev-reset.sh
+```
+This script will:
+- Stop and remove containers, volumes, and networks
+- Remove the frontend and the backend images
+- Rebuild and start everything cleanly
+
 ## 📄 API Documentation
 Once the backend is running, visit:
 ```sh
